@@ -1,16 +1,71 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+@layer base {
+  .primary-gradient {
+    background: linear-gradient(
+      93.29deg,
+      #ff5964 1.94%,
+      rgba(167, 15, 205, 0.67) 140.37%
+    );
+  }
+  .circula-path{
+    clip-path: circle(91.1% at 53% 100%);
+  }
+  /* .slideImage {
+    animation: moveSlideshow 3s linear;animation-fill-mode: forwards;
+  } */
+  
+  @keyframes moveSlideshow {
+    100% {
+      transform: translateY(calc(-100% + 200px));
+    }
+  }
 
-* {
-  box-sizing: border-box;
+  .slideImage {
+    bottom: -1210px;
+    width: 100%;
+    height: auto;
+    position: absolute;
+    z-index: 0;
+    margin:0;
+    padding:0;
+    -webkit-transition: top 11s;
+    -moz-transition: top 11s;
+    -ms-transition: top 11s;
+    -o-transition: top 11s;
+    transition: bottom 11s;
+  }
+  .slideImagehover {
+    bottom: 0;
+    -webkit-transition: all 11s;
+    -moz-transition: all 11s;
+    -ms-transition: all 11s;
+    -o-transition: all 11s;
+    transition: all 11s;
+  }
+
+
+
+  @font-face {
+    font-family: "avenir";
+    font-weight: 700;
+    src: url("/fonts/Avenir LT Std 85 Heavy.otf") format("opentype");
+  }
+  @font-face {
+    font-family: "avenir";
+    font-weight: 900;
+    src: url("/fonts/Avenir LT Std 95 Black.otf") format("opentype");
+  }
+  @font-face {
+    font-family: "avenir-black";
+    font-weight: 900;
+    src: url("/fonts/Avenir LT Std 95 Black.otf") format("opentype");
+  }
+  @font-face {
+    font-family: "avenir";
+    font-weight: 400;
+    src: url("/fonts/Avenir LT Std 55 Roman.otf") format("opentype");
+  }
 }
