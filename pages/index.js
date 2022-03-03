@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import { useState, useEffect } from "react";
 import Head from "next/head";
 import Image from "next/image";
@@ -220,13 +219,13 @@ export default function Home() {
             </motion.div>
             <div className="  mx-auto grid px-16 pt-16 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
               {list.slice(0, limit).map((item, index) => (
-                // eslint-disable-next-line react/jsx-key
                 <motion.div
                   whileHover={{
                     y: [0, -12],
                     duration: 1,
                   }}
                   initial={{ opacity: 0 }}
+                  key={index}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.1 }}
                   className=" flex flex-col  rounded-lg border-4 border-white bg-white"
@@ -252,14 +251,14 @@ export default function Home() {
                       <div className="bg-[#1E1E1E] text-xs   px-6 py-3    text-center text-white rounded-3xl">
                         {item.theme}
                       </div>
-                      {
-                        // eslint-disable-next-line react/jsx-key
-                        item.tags.map((tag, index) => (
-                          <div className="bg-[#1E1E1E] text-xs   px-4 py-3    text-center text-white rounded-3xl">
-                            {tag}
-                          </div>
-                        ))
-                      }
+                      {item.tags.map((tag, index) => (
+                        <div
+                          key={index}
+                          className="bg-[#1E1E1E] text-xs   px-4 py-3    text-center text-white rounded-3xl"
+                        >
+                          {tag}
+                        </div>
+                      ))}
                       {/* <div className="bg-[#1E1E1E] text-xs   px-4 py-3    text-center text-white rounded-3xl">
                 Developer
               </div>
