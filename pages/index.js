@@ -1,42 +1,98 @@
 import { useState, useEffect } from "react";
 import Head from "next/head";
 import Image from "next/image";
+import ArrowGif from "../public/arrow.gif";
 import LineSvg from "../public/assets/svg/line1.svg";
 import Instagram from "../public/icon/Instagram.svg";
 import LinkedIn from "../public/icon/LinkedIn.svg";
 import Twitter from "../public/icon/Twitter.svg";
 import Link from "../public/icon/link.svg";
-import data from "./../api/data.json";
 import { motion } from "framer-motion";
+import qs from "qs";
+import validator from "validator";
+import axios from "axios";
 
 export default function Home() {
-  const [list, setlist] = useState(data);
-  const [error, setError] = useState("");
+  const [list, setlist] = useState(null);
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState(false);
+  const [message, setMessage] = useState(
+    ""
+  );
   const [limit, setLimit] = useState(12);
+  const [page, setPage] = useState(1);
 
-  // const [loading, setLoading] = useState(true);
-  // useEffect(() => {
-  //   setInterval(() => {
-  //     setLoading(false);
-  //   }, 1500);
-  // });
-  const [filter, setFiler] = useState("all");
-  useEffect(() => {
-    switch (filter) {
-      case "all":
-        return setlist(data);
-      case "dark":
-        return setlist(data.filter((item) => item.theme === "dark"));
-      case "light":
-        return setlist(data.filter((item) => item.theme === "light"));
-      case "developer":
-        return setlist(data.filter((item) => item.tags.includes("Developer")));
-      case "designer":
-        return setlist(data.filter((item) => item.tags.includes("Designer")));
-      default:
-        return setlist(data);
+  const query = qs.stringify(
+    {
+      populate: "*",
+      pagination: {
+        pageSize: limit,
+        page: page,
+      },
+      publicationState: "live",
+      locale: ["en"],
+    },
+    {
+      encodeValuesOnly: true, // prettify url
     }
-  }, [filter]);
+  );
+
+  useEffect(() => {
+    axios
+      .get(
+        `https://pfolio-strapi-application-q8cy6.ondigitalocean.app/api/portfolios?${query}`
+      )
+      .then((res) => {
+        setlist(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [limit]);
+
+  const addToWaitlist = (e) => {
+    e.preventDefault();
+    const data = {
+      email,
+      link: "https://pfolio.me",
+    };
+
+    if (validator.isEmail(email)) {
+      axios
+        .post("https://nighteye.co/api/v1/profile/addToWaitlist", data, {
+          headers: { "Content-Type": "application/json" },
+        })
+        .then((res) => {
+          console.log(res.data);
+          setMessage("You have been added to the waitlist successfully ! We will get back to you soon.");
+          setEmail("");
+        })
+        .catch((err) => {
+          console.log(err.message);
+          setError("error");
+        });
+    } else {
+      setError(true);
+    }
+  };
+
+  const [filter, setFiler] = useState("all");
+  // useEffect(() => {
+  //   switch (filter) {
+  //     case "all":
+  //       return setlist(data);
+  //     case "dark":
+  //       return setlist(data.filter((item) => item.theme === "dark"));
+  //     case "light":
+  //       return setlist(data.filter((item) => item.theme === "light"));
+  //     case "developer":
+  //       return setlist(data.filter((item) => item.tags.includes("Developer")));
+  //     case "designer":
+  //       return setlist(data.filter((item) => item.tags.includes("Designer")));
+  //     default:
+  //       return setlist(data);
+  //   }
+  // }, [filter]);
   // const filterPortfolio = () => {
 
   // };
@@ -84,8 +140,35 @@ export default function Home() {
                   Else
                 </h1>
               </div>
-              <div className="bg-[#100F10] text-white font-avenir font-normal rounded-4xl px-9 py-2">
+              <a
+                target="_blank"
+                href="https://tally.so/r/nPJjQ3"
+                rel="noreferrer"
+                className="bg-[#100F10] text-white font-avenir font-normal rounded-4xl px-9 py-2"
+              >
                 Submit
+              </a>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 0.1 }}
+          >
+            <div className="absolute hidden lg:block top-24 right-0 mr-8 md:mr-20 lg:mr-32">
+              <div className="w-16 h-16 rotate-45">
+                <Image
+                  src={ArrowGif}
+                  alt="gif"
+                  layout="fill"
+                  objectFit="cover"
+                />
+              </div>
+              <div className="text-4xl text-center font-whippine ">
+                Submit your
+                <br /> portfolio <br />
+                here...
               </div>
             </div>
           </motion.div>
@@ -126,30 +209,42 @@ export default function Home() {
               transition={{ duration: 1, delay: 1.5 }}
               className="pt-8"
             >
-              <div className=" flex justify-center items-center ">
-                <div className="relative ">
-                  <div className="absolute "></div>{" "}
-                  <input
-                    type="text"
-                    className={`h-16 lg:h-20 w-80 lg:w-[536px] pl-4 lg:pl-9 bg-white pr-8 rounded-2xl font-roman text-black placeholder-black text-lg shadow-2xl focus:shadow-xl transform transition duration-150 delay-100 focus:border-2 ${
-                      error ? "border-red-400" : "border-green-200"
-                    }  focus:outline-none`}
-                    placeholder="Enter Your Email..."
-                    id="email"
-                    // value={email}
-                    // onChange={(e) => setEmail(e.target.value)}
-                  />
-                  <div className="absolute top-2 right-2">
-                    {" "}
-                    <button
-                      // onClick={addToWaitlist}
-                      className="h-12 lg:h-16  w-full px-4 lg:px-10  lg:py-4 text-white font-roman  text-lg rounded-2xl primary-gradient"
-                    >
-                      Subscribe
-                    </button>{" "}
+              {message ? (
+                <div className="px-auto flex items-center">
+                  <div
+                    className={`flex items-center mx-auto  px-auto bg-green-200 w-[300px] md:w-[400px] xl:w-[600px] rounded-xl font-semibold shadow-lg  `}
+                  >
+                    <div className="text-center text-gray-800 font-bold  px-8 py-8 font-title text-sm ">
+                      {message}
+                    </div>{" "}
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className=" flex justify-center items-center ">
+                  <div className="relative ">
+                    <div className="absolute "></div>{" "}
+                    <input
+                      type="text"
+                      className={`h-16 lg:h-20 w-80 lg:w-[536px] pl-4 lg:pl-9 bg-white pr-8 rounded-2xl font-roman text-black placeholder-black text-lg shadow-2xl focus:shadow-xl transform transition duration-150 delay-100 focus:border-2 ${
+                        error ? "border-red-400" : "border-green-200"
+                      }  focus:outline-none`}
+                      placeholder="Enter Your Email..."
+                      id="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <div className="absolute top-2 right-2">
+                      {" "}
+                      <button
+                        onClick={addToWaitlist}
+                        className="h-12 lg:h-16  w-full px-4 lg:px-10  lg:py-4 text-white font-roman  text-lg rounded-2xl primary-gradient"
+                      >
+                        Subscribe
+                      </button>{" "}
+                    </div>
+                  </div>
+                </div>
+              )}
               <div className="pt-4 mx-auto pb-24  w-11/12 md:8/12 lg:w-5/12">
                 <p className="text-[#3F3E3E] text-lg   font-bold font-body text-center">
                   Subscribe to get portfolio inspirations!!
@@ -161,20 +256,20 @@ export default function Home() {
           {/* bg-[#100F10] */}
           {/* Portfolio Section */}
           <motion.div
-            initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ y: 100 }}
+            animate={{ y: 0 }}
             transition={{ duration: 1, delay: 2 }}
             id="portfolio"
             className="w-full mx-auto h-full bg-[#100F10] pb-40  "
           >
-            <div className="text-center text-3xl text-[#FF5964] font-heading py-8">
+            <div className="text-center text-3xl text-[#FF5964]  font-heading py-8">
               Portfolio Gallery
             </div>
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 3 }}
-              className="flex flex-row flex-wrap items-center justify-center w-8/12 wrap mx-auto gap-2 lg:gap-4 "
+              className="flex flex-row flex-wrap items-center font-body justify-center w-8/12 wrap mx-auto gap-2 lg:gap-4 "
             >
               <div
                 onClick={() => setFiler("all")}
@@ -216,69 +311,69 @@ export default function Home() {
               >
                 Developer
               </div>{" "}
-            </motion.div>
+            </motion.div> */}
             <div className="  mx-auto grid px-16 pt-16 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-              {list.slice(0, limit).map((item, index) => (
-                <motion.div
-                  whileHover={{
-                    y: [0, -12],
-                    duration: 1,
-                  }}
-                  initial={{ opacity: 0 }}
-                  key={index}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.1 }}
-                  className=" flex flex-col  rounded-lg border-4 border-white bg-white"
-                >
-                  <motion.div className="h-[400px] relative">
-                    <Image
-                      src={item.url}
-                      key={index}
-                      alt="portfolio image"
-                      layout="fill"
-                      objectFit="cover"
-                      placeholder="blur"
-                      loading="eager"
-                      priority={true}
-                      blurDataURL="https://www.gaithersburgdental.com/wp-content/uploads/2016/10/orionthemes-placeholder-image.png"
-                      objectPosition="top"
-                      // width="500px"
-                      className="cursor-pointer"
-                    />{" "}
-                  </motion.div>
-                  <div className="flex flex-row justify-between py-4 px-2 ">
-                    <div className="flex flex-row flex-wrap  gap-2">
-                      <div className="bg-[#1E1E1E] text-xs   px-6 py-3    text-center text-white rounded-3xl">
-                        {item.theme}
-                      </div>
-                      {item.tags.map((tag, index) => (
-                        <div
-                          key={index}
-                          className="bg-[#1E1E1E] text-xs   px-4 py-3    text-center text-white rounded-3xl"
-                        >
-                          {tag}
-                        </div>
-                      ))}
-                      {/* <div className="bg-[#1E1E1E] text-xs   px-4 py-3    text-center text-white rounded-3xl">
-                Developer
-              </div>
-              <div className="bg-[#1E1E1E] text-xs   px-4 py-3    text-center text-white rounded-3xl">
-                Designer
-              </div> */}
-                    </div>
-                    <div className="py-1 px-4">
-                      <div className="relative h-8 w-8">
+              {list &&
+                list.map((item, index) => (
+                  // eslint-disable-next-line react/jsx-key
+                  <a
+                    target="_blank"
+                    href={item.attributes.name}
+                    rel="noreferrer"
+                    key={index}
+                  >
+                    <motion.div
+                      whileHover={{
+                        y: [0, -12],
+                        duration: 1,
+                      }}
+                      className=" flex flex-col  rounded-lg border-4 border-white bg-white"
+                    >
+                      <motion.div className="h-[400px] relative">
                         <Image
-                          src={Link}
-                          alt=""
-                          onClick={() => window.open(`${item.Name}`, "_blank")}
-                          className="h-full w-full cursor-pointer"
-                        />
+                          src={item.attributes.image.data.attributes.url}
+                          key={index}
+                          alt="portfolio image"
+                          layout="fill"
+                          objectFit="cover"
+                          placeholder="blur"
+                          loading="eager"
+                          priority={true}
+                          blurDataURL="https://www.gaithersburgdental.com/wp-content/uploads/2016/10/orionthemes-placeholder-image.png"
+                          objectPosition="top"
+                          // width="500px"
+                          className="cursor-pointer"
+                        />{" "}
+                      </motion.div>
+                      <div className="flex flex-row justify-between py-4 px-2 ">
+                        <div className="flex flex-row flex-wrap  gap-2">
+                          <div className="bg-[#1E1E1E] text-xs   px-6 py-3    text-center text-white rounded-3xl">
+                            {item.attributes.theme}
+                          </div>
+
+                          <div
+                            key={index}
+                            className="bg-[#1E1E1E] text-xs   px-4 py-3    text-center text-white rounded-3xl"
+                          >
+                            {item.attributes.tags}
+                          </div>
+                        </div>
+                        <div className="py-1 px-4">
+                          <div className="relative h-8 w-8">
+                            <Image
+                              src={Link}
+                              alt=""
+                              onClick={() =>
+                                window.open(`${item.Name}`, "_blank")
+                              }
+                              className="h-full w-full cursor-pointer"
+                            />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+                    </motion.div>
+                  </a>
+                ))}
             </div>
             <div className="py-12 mx-auto pb-8 flex items-center justify-center">
               {limit < 105 && (
@@ -323,37 +418,55 @@ export default function Home() {
         <Image src={LineSvg} alt="" className="h-full w-full" />
       </div> */}
             </div>
-            <div className="pt-20">
-              <div className=" flex justify-center items-center ">
-                <div className="relative ">
-                  <div className="absolute "></div>{" "}
-                  <input
-                    type="text"
-                    className={`h-20 w-80 lg:w-[536px] pl-4 lg:pl-9 pr-8 rounded-2xl font-roman text-black placeholder-black text-lg shadow-lg border-2 ${
-                      error ? "border-red-400" : "border-primary-1"
-                    }  focus:outline-none`}
-                    placeholder="Enter Your Email..."
-                    id="email"
-                    // value={email}
-                    // onChange={(e) => setEmail(e.target.value)}
-                  />
-                  <div className="absolute top-2 right-2">
-                    {" "}
-                    <button
-                      // onClick={addToWaitlist}
-                      className="h-16  w-full px-2 lg:px-10  py-4 text-black font-roman  text-lg rounded-2xl primary-gradient"
-                    >
-                      Subscribe
-                    </button>{" "}
+            <motion.div
+              initial={{ opacity: 0, y: -30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 1.5 }}
+              className="pt-20"
+            >
+              {message ? (
+                <div className="px-auto flex items-center">
+                  <div
+                    className={`flex items-center mx-auto  px-autoP
+                     bg-green-200 w-[300px] md:w-[400px] xl:w-[600px] rounded-xl font-semibold shadow-lg  `}
+                  >
+                    <div className="text-center text-gray-800 font-bold  px-8 py-8 font-title text-sm ">
+                      {message}
+                    </div>{" "}
                   </div>
                 </div>
-              </div>
-              <div className="pt-4 mx-auto  w-5/12">
-                <p className="text-[#3F3E3E] text-lg pb-8  font-bold font-body text-center">
+              ) : (
+                <div className=" flex justify-center items-center ">
+                  <div className="relative ">
+                    <div className="absolute "></div>{" "}
+                    <input
+                      type="text"
+                      className={`h-16 lg:h-20 w-80 lg:w-[536px] pl-4 lg:pl-9 bg-white pr-8 rounded-2xl font-roman text-black placeholder-black text-lg shadow-2xl focus:shadow-xl transform transition duration-150 delay-100 focus:border-2 ${
+                        error ? "border-red-400" : "border-green-200"
+                      }  focus:outline-none`}
+                      placeholder="Enter Your Email..."
+                      id="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <div className="absolute top-2 right-2">
+                      {" "}
+                      <button
+                        onClick={addToWaitlist}
+                        className="h-12 lg:h-16  w-full px-4 lg:px-10  lg:py-4 text-white font-roman  text-lg rounded-2xl primary-gradient"
+                      >
+                        Subscribe
+                      </button>{" "}
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div className="pt-4 mx-auto pb-24  w-11/12 md:8/12 lg:w-5/12">
+                <p className="text-[#3F3E3E] text-lg   font-bold font-body text-center">
                   Subscribe to get portfolio inspirations!!
                 </p>
               </div>
-            </div>
+            </motion.div>
           </div>
           <div className="w-screen bg-[#1E1E1E] h-20 flex items-center justify-center">
             <div className="flex items-center justify-center mx-auto gap-3">
@@ -400,11 +513,3 @@ export default function Home() {
     </div>
   );
 }
-
-// {
-//   "Name": "http://www.elisefu.com/",
-//   "url": "s3://firstletter-multimedia/screencapture-elisefu-2022-02-28-04_08_00 (1).png",
-//   "Tags": "Designer",
-//   "theme": "light",
-//   "Include": "yes"
-// },

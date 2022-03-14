@@ -8,9 +8,9 @@ module.exports = {
       fontFamily: {
         body:'avenir',
         heading:'avenir-black',
+        whippine: 'whippine',
       },
       borderRadius: {
-       
         '4xl': '30px',
       }
     },

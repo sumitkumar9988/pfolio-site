@@ -10,13 +10,13 @@
       rgba(167, 15, 205, 0.67) 140.37%
     );
   }
-  .circula-path{
+  .circula-path {
     clip-path: circle(91.1% at 53% 100%);
   }
   /* .slideImage {
     animation: moveSlideshow 3s linear;animation-fill-mode: forwards;
   } */
-  
+
   @keyframes moveSlideshow {
     100% {
       transform: translateY(calc(-100% + 200px));
@@ -29,8 +29,8 @@
     height: auto;
     position: absolute;
     z-index: 0;
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
     -webkit-transition: top 11s;
     -moz-transition: top 11s;
     -ms-transition: top 11s;
@@ -45,8 +45,6 @@
     -o-transition: all 11s;
     transition: all 11s;
   }
-
-
 
   @font-face {
     font-family: "avenir";
@@ -67,5 +65,10 @@
     font-family: "avenir";
     font-weight: 400;
     src: url("/fonts/Avenir LT Std 55 Roman.otf") format("opentype");
+  }
+  @font-face {
+    font-family: "whippine";
+    font-weight: 400;
+    src: url("/fonts/WhippinPicadilly-Regular.otf") format("opentype");
   }
 }
