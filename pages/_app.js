@@ -6,7 +6,7 @@ import { init } from '../lib/gtag'
 function MyApp({ Component, pageProps }) {
   const router = useRouter()
   useEffect(() => {
-    init('G-4LDK1CPP7W');
+    init('G-PT4G55SJ2E');
   }, []);
   return <Component {...pageProps} />
 }
