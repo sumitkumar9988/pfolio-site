@@ -14,7 +14,7 @@ import axios from "axios";
 import { logEvent } from "./../lib/gtag";
 
 export default function Home() {
-  
+
   const [list, setlist] = useState(null);
   const [email, setEmail] = useState("");
   const [error, setError] = useState(false);
@@ -376,8 +376,8 @@ export default function Home() {
                               alt=""
                               onClick={() =>
                                { logEvent({
-                                action: "search",
-                                value: item.attributes.name,
+                                action: "click",
+                                label: item.attributes.name,
                                 category: "portfolio",
                               })
                                 window.open(`${item.attributes.name}`, "_blank")}
