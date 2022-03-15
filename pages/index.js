@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Head from "next/head";
 import Image from "next/image";
-import ArrowGif from "../public/arrow.gif";
+import ArrowGif from "../public/arrow2.gif";
 import LineSvg from "../public/assets/svg/line1.svg";
 import Instagram from "../public/icon/Instagram.svg";
 import LinkedIn from "../public/icon/LinkedIn.svg";
@@ -11,14 +11,14 @@ import { motion } from "framer-motion";
 import qs from "qs";
 import validator from "validator";
 import axios from "axios";
+import { logEvent } from "./../lib/gtag";
 
 export default function Home() {
+  
   const [list, setlist] = useState(null);
   const [email, setEmail] = useState("");
   const [error, setError] = useState(false);
-  const [message, setMessage] = useState(
-    ""
-  );
+  const [message, setMessage] = useState("");
   const [limit, setLimit] = useState(12);
   const [page, setPage] = useState(1);
 
@@ -64,7 +64,9 @@ export default function Home() {
         })
         .then((res) => {
           console.log(res.data);
-          setMessage("You have been added to the waitlist successfully ! We will get back to you soon.");
+          setMessage(
+            "You have been added to the waitlist successfully ! We will get back to you soon."
+          );
           setEmail("");
         })
         .catch((err) => {
@@ -120,7 +122,7 @@ export default function Home() {
       // animate={{ opacity: 1 }}
       // transition={{ delay: 2, duration: 0.1 }}
       >
-        <main id="main" className=" bg-[#FAFBFC] scroll-smooth ">
+        <main id="main" className=" bg-[#FAFBFC] scroll-smooth overflow-x-hidden">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -30 }}
@@ -321,12 +323,21 @@ export default function Home() {
                     href={item.attributes.name}
                     rel="noreferrer"
                     key={index}
+                    onClick={() =>
+                      logEvent({
+                        category: "portfolio",
+                        action: "click",
+                        label: item.attributes.name,
+                        value: item.attributes.name,
+                      })
+                    }
                   >
                     <motion.div
                       whileHover={{
                         y: [0, -12],
                         duration: 1,
                       }}
+                    
                       className=" flex flex-col  rounded-lg border-4 border-white bg-white"
                     >
                       <motion.div className="h-[400px] relative">
@@ -364,8 +375,14 @@ export default function Home() {
                               src={Link}
                               alt=""
                               onClick={() =>
-                                window.open(`${item.Name}`, "_blank")
+                               { logEvent({
+                                action: "search",
+                                value: item.attributes.name,
+                                category: "portfolio",
+                              })
+                                window.open(`${item.attributes.name}`, "_blank")}
                               }
+                              
                               className="h-full w-full cursor-pointer"
                             />
                           </div>

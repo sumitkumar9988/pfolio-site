@@ -13,6 +13,7 @@
     "cucumber": "^7.0.0-rc.0",
     "dotenv": "^16.0.0",
     "framer-motion": "^6.2.8",
+    "ga-4-react": "^0.1.281",
     "i": "^0.3.7",
     "karma-phantomjs-launcher": "^1.0.4",
     "next": "12.1.0",
