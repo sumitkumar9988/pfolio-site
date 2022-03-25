@@ -14,7 +14,6 @@ import axios from "axios";
 import { logEvent } from "./../lib/gtag";
 
 export default function Home() {
-
   const [list, setlist] = useState(null);
   const [email, setEmail] = useState("");
   const [error, setError] = useState(false);
@@ -122,7 +121,10 @@ export default function Home() {
       // animate={{ opacity: 1 }}
       // transition={{ delay: 2, duration: 0.1 }}
       >
-        <main id="main" className=" bg-[#FAFBFC] scroll-smooth overflow-x-hidden">
+        <main
+          id="main"
+          className=" bg-[#FAFBFC] scroll-smooth overflow-x-hidden"
+        >
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -30 }}
@@ -176,12 +178,28 @@ export default function Home() {
           </motion.div>
 
           {/* Hero Section  */}
-          <div id="hero" className="pt-8 bg-[#FAFBFC]">
+          <div id="hero" className="pt-8 bg-[#FAFBFC] text-center w-full">
+            <div className="flex items-center text-center w-full mx-auto">
+              <a
+                href="https://www.producthunt.com/posts/pfolio-site?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-pfolio&#0045;site"
+                target="_blank"
+                rel="noreferrer"
+                className="mx-auto"
+              >
+                <img
+                  src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=336651&theme=light"
+                  alt="pfolio&#0046;site - A&#0032;growing&#0032;collection&#0032;of&#0032;stunning&#0032;portfolio&#0032;sites&#0046; | Product Hunt"
+                  width="250"
+                  height="54"
+                />
+              </a>
+            </div>
+
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1 }}
-              className="text-4xl md:text-5xl lg:text-7xl font-heading text-black text-center leading-tight lg:leading-snug"
+              className="text-4xl md:text-5xl lg:text-7xl pt-8 font-heading text-black text-center leading-tight lg:leading-snug"
             >
               Get Portfolio <br />
               Inspirations
@@ -337,7 +355,6 @@ export default function Home() {
                         y: [0, -12],
                         duration: 1,
                       }}
-                    
                       className=" flex flex-col  rounded-lg border-4 border-white bg-white"
                     >
                       <motion.div className="h-[400px] relative">
@@ -374,15 +391,17 @@ export default function Home() {
                             <Image
                               src={Link}
                               alt=""
-                              onClick={() =>
-                               { logEvent({
-                                action: "click",
-                                label: item.attributes.name,
-                                category: "portfolio",
-                              })
-                                window.open(`${item.attributes.name}`, "_blank")}
-                              }
-                              
+                              onClick={() => {
+                                logEvent({
+                                  action: "click",
+                                  label: item.attributes.name,
+                                  category: "portfolio",
+                                });
+                                window.open(
+                                  `${item.attributes.name}`,
+                                  "_blank"
+                                );
+                              }}
                               className="h-full w-full cursor-pointer"
                             />
                           </div>
