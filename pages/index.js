@@ -179,7 +179,12 @@ export default function Home() {
 
           {/* Hero Section  */}
           <div id="hero" className="pt-8 bg-[#FAFBFC] text-center w-full">
-            <div className="flex items-center text-center w-full mx-auto">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2, duration: 0.5 }}
+              className="flex items-center text-center w-full mx-auto"
+            >
               <a
                 href="https://www.producthunt.com/posts/pfolio-site?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-pfolio&#0045;site"
                 target="_blank"
@@ -193,7 +198,7 @@ export default function Home() {
                   height="54"
                 />
               </a>
-            </div>
+            </motion.div>
 
             <motion.div
               initial={{ opacity: 0 }}
