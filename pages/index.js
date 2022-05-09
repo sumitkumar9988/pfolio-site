@@ -21,28 +21,12 @@ export default function Home() {
   const [limit, setLimit] = useState(12);
   const [page, setPage] = useState(1);
 
-  const query = qs.stringify(
-    {
-      populate: "*",
-      pagination: {
-        pageSize: limit,
-        page: page,
-      },
-      publicationState: "live",
-      locale: ["en"],
-    },
-    {
-      encodeValuesOnly: true, // prettify url
-    }
-  );
-
   useEffect(() => {
     axios
-      .get(
-        `https://pfolio-strapi-application-q8cy6.ondigitalocean.app/api/portfolios?${query}`
-      )
+      .get(`/api/hello?limit=${limit}`)
       .then((res) => {
-        setlist(res.data.data);
+        console.log("result", res.data);
+        setlist(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -53,13 +37,13 @@ export default function Home() {
     e.preventDefault();
     const data = {
       email,
-      link: "https://pfolio.me",
+      link: "https://pfolio.me"
     };
 
     if (validator.isEmail(email)) {
       axios
         .post("https://nighteye.co/api/v1/profile/addToWaitlist", data, {
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json" }
         })
         .then((res) => {
           console.log(res.data);
@@ -78,26 +62,6 @@ export default function Home() {
   };
 
   const [filter, setFiler] = useState("all");
-  // useEffect(() => {
-  //   switch (filter) {
-  //     case "all":
-  //       return setlist(data);
-  //     case "dark":
-  //       return setlist(data.filter((item) => item.theme === "dark"));
-  //     case "light":
-  //       return setlist(data.filter((item) => item.theme === "light"));
-  //     case "developer":
-  //       return setlist(data.filter((item) => item.tags.includes("Developer")));
-  //     case "designer":
-  //       return setlist(data.filter((item) => item.tags.includes("Designer")));
-  //     default:
-  //       return setlist(data);
-  //   }
-  // }, [filter]);
-  // const filterPortfolio = () => {
-
-  // };
-
   const onLoadMore = () => {
     setLimit(limit + 12);
     console.log("on load more", limit);
@@ -351,14 +315,14 @@ export default function Home() {
                         category: "portfolio",
                         action: "click",
                         label: item.attributes.name,
-                        value: item.attributes.name,
+                        value: item.attributes.name
                       })
                     }
                   >
                     <motion.div
                       whileHover={{
                         y: [0, -12],
-                        duration: 1,
+                        duration: 1
                       }}
                       className=" flex flex-col  rounded-lg border-4 border-white bg-white"
                     >
@@ -400,7 +364,7 @@ export default function Home() {
                                 logEvent({
                                   action: "click",
                                   label: item.attributes.name,
-                                  category: "portfolio",
+                                  category: "portfolio"
                                 });
                                 window.open(
                                   `${item.attributes.name}`,
@@ -421,7 +385,7 @@ export default function Home() {
                 <motion.div
                   whileHover={{
                     y: [0, -10, 0],
-                    duration: 1,
+                    duration: 1
                   }}
                   onClick={onLoadMore}
                   className="px-6 md:px-8 lg:px-12 py-2 md:py-3 lg:py-4 cursor-pointer text-white text-sm  md:text-base primary-gradient rounded-2xl"
